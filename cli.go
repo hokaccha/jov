@@ -52,7 +52,7 @@ func NewCliApp() *cli.App {
 		},
 		cli.IntFlag{
 			Name:  "truncate, t",
-			Usage: "truncate string length",
+			Usage: "Truncate string length",
 		},
 	}
 	app.Commands = []cli.Command{
@@ -111,8 +111,8 @@ func doMain(c *cli.Context) {
 
 var cmdGet = cli.Command{
 	Name:        "get",
-	Usage:       "Get value of property",
-	Description: makeCommandDescription("get <property>", ""),
+	Usage:       "Retrieve the value of a object",
+	Description: makeCommandDescription("get <key>", ""),
 	Action: func(c *cli.Context) {
 		log.Printf("%#v", c)
 		out, err := processor.Get(InputJson, c.Args()[0])
@@ -127,7 +127,7 @@ var cmdGet = cli.Command{
 
 var cmdSelect = cli.Command{
 	Name:        "select",
-	Usage:       "Select properties from collection",
+	Usage:       "Select properties of a collection",
 	Description: makeCommandDescription("select <property>...", ""),
 	Action: func(c *cli.Context) {
 		out, err := processor.Select(InputJson, c.Args()...)
@@ -142,7 +142,7 @@ var cmdSelect = cli.Command{
 
 var cmdReject = cli.Command{
 	Name:        "reject",
-	Usage:       "Reject properties from collection",
+	Usage:       "Reject properties of a collection",
 	Description: makeCommandDescription("reject <property>...", ""),
 	Action: func(c *cli.Context) {
 		out, err := processor.Reject(InputJson, c.Args()...)
@@ -157,7 +157,7 @@ var cmdReject = cli.Command{
 
 var cmdSlice = cli.Command{
 	Name:        "slice",
-	Usage:       "Slice array",
+	Usage:       "Return a array starting at the <start> index and continuing for <length> elements of a array",
 	Description: makeCommandDescription("slice <start> <length>", ""),
 	Action: func(c *cli.Context) {
 		args := c.Args()
@@ -188,7 +188,7 @@ var cmdSlice = cli.Command{
 
 var cmdHead = cli.Command{
 	Name:        "head",
-	Usage:       "head array",
+	Usage:       "Return the first <length> elements of a array",
 	Description: makeCommandDescription("head <length>", ""),
 	Action: func(c *cli.Context) {
 		args := c.Args()
@@ -214,7 +214,7 @@ var cmdHead = cli.Command{
 
 var cmdTail = cli.Command{
 	Name:  "tail",
-	Usage: "tail array",
+	Usage: "Return the last <length> elements of a array",
 	Action: func(c *cli.Context) {
 		args := c.Args()
 
