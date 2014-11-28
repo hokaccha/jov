@@ -246,14 +246,15 @@ func argumentsErrorAndExit(c *cli.Context, cmd string) {
 func outputJson(o interface{}, c *cli.Context) {
 	var s []byte
 	var err error
+	var formatter = prettyjson.NewFormatter()
 
-	prettyjson.StringMaxLength = c.Int("truncate")
+	formatter.StringMaxLength = c.Int("truncate")
 
-	if isatty.IsTerminal(os.Stdout.Fd()) {
-		s, err = prettyjson.MarshalPretty(o)
-	} else {
-		s, err = json.MarshalIndent(o, "", "  ")
+	if !isatty.IsTerminal(os.Stdout.Fd()) {
+		formatter.DisabledColor = true
 	}
+
+	s, err = formatter.Marshal(o)
 
 	if err != nil {
 		log.Fatal(err)
