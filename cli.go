@@ -114,7 +114,6 @@ var cmdGet = cli.Command{
 	Usage:       "Retrieve the value of a object",
 	Description: makeCommandDescription("get <key>", ""),
 	Action: func(c *cli.Context) {
-		log.Printf("%#v", c)
 		out, err := processor.Get(InputJson, c.Args()[0])
 
 		if err != nil {
