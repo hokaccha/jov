@@ -201,7 +201,7 @@ var cmdHead = cli.Command{
 			argumentsErrorAndExit(c, "head")
 		}
 
-		out, err := processor.Slice(InputJson, 0, length)
+		out, err := processor.Head(InputJson, length)
 
 		if err != nil {
 			log.Fatal(err)
@@ -227,7 +227,7 @@ var cmdTail = cli.Command{
 			argumentsErrorAndExit(c, "tail")
 		}
 
-		out, err := processor.Slice(InputJson, 0, length)
+		out, err := processor.Tail(InputJson, length)
 
 		if err != nil {
 			log.Fatal(err)
