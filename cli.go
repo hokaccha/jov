@@ -214,6 +214,7 @@ var cmdHead = cli.Command{
 var cmdTail = cli.Command{
 	Name:  "tail",
 	Usage: "Return the last <length> elements of a array",
+	Description: makeCommandDescription("tail <length>", ""),
 	Action: func(c *cli.Context) {
 		args := c.Args()
 
