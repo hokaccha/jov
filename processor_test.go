@@ -83,7 +83,7 @@ func TestProcessorSlice(t *testing.T) {
 	test([]interface{}{1, 2, 3, 4, 5}, 10, 10, JsonArray{}, "slice-4")
 }
 
-func TestProcessorhead(t *testing.T) {
+func TestProcessorHead(t *testing.T) {
 	test := func(in []interface{}, length int, expected JsonArray, msg string) {
 		out, err := processor.Head(in, length)
 		if err != nil {
