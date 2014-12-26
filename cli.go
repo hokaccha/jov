@@ -24,6 +24,8 @@ OPTIONS:
    {{end}}{{ end }}
 `
 
+var formatter = prettyjson.NewFormatter()
+
 func makeCommandDescription(usage, description string) string {
 	format := "USAGE:\n   jov %s"
 
@@ -50,10 +52,6 @@ func NewCliApp() *cli.App {
 			Name:  "file, f",
 			Usage: "Input JSON file path",
 		},
-		cli.IntFlag{
-			Name:  "truncate, t",
-			Usage: "Truncate string length",
-		},
 	}
 	app.Commands = []cli.Command{
 		cmdGet,
@@ -61,6 +59,7 @@ func NewCliApp() *cli.App {
 		cmdReject,
 		cmdHead,
 		cmdTail,
+		cmdTruncate,
 	}
 	app.Before = doBefore
 	app.Action = doMain
@@ -205,6 +204,28 @@ var cmdTail = cli.Command{
 	},
 }
 
+var cmdTruncate = cli.Command{
+	Name:  "truncate",
+	Usage: "Truncate string to <length>",
+	Description: makeCommandDescription("truncate <length>", ""),
+	Action: func(c *cli.Context) {
+		args := c.Args()
+
+		if len(args) != 1 {
+			argumentsErrorAndExit(c, "truncate")
+		}
+
+		length, err := strconv.Atoi(args[0])
+		if err != nil {
+			argumentsErrorAndExit(c, "truncate")
+		}
+
+		formatter.StringMaxLength = length
+
+		outputJson(InputJson, c)
+	},
+}
+
 func argumentsErrorAndExit(c *cli.Context, cmd string) {
 	fmt.Fprintln(os.Stderr, "Arguments Error\n")
 	cli.ShowCommandHelp(c, cmd)
@@ -214,9 +235,6 @@ func argumentsErrorAndExit(c *cli.Context, cmd string) {
 func outputJson(o interface{}, c *cli.Context) {
 	var s []byte
 	var err error
-	var formatter = prettyjson.NewFormatter()
-
-	formatter.StringMaxLength = c.Int("truncate")
 
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
 		formatter.DisabledColor = true
