@@ -10,50 +10,59 @@ Installation
 $ go get -u github.com/hokaccha/jov
 ```
 
+Example
+------------------
+
+![Example capture](http://i.imgur.com/ELFbJcA.png)
+
 Usage
 ------------------
 
 Example json file:
 
 ```
-$ cat foo.json
-[{"id":1,"title":"foo","body":"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system.","created_at":"2011-04-22T13:33:48Z"},{"id":2,"title":"bar","body":"The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary.","created_at":"2012-04-22T13:33:48Z"},{"id":3,"title":"baz","body":"Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.","created_at":"2013-04-22T13:33:48Z"}]
+$ cat posts.json
+{"status":200,"result":[{"id":1,"title":"foo","body":"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system.","created_at":"2011-04-22T13:33:48Z"},{"id":2,"title":"bar","body":"The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary.","created_at":"2012-04-22T13:33:48Z"},{"id":3,"title":"baz","body":"Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.","created_at":"2013-04-22T13:33:48Z"}]}
 ```
 
 ### show pretty
 
 ```
 # From stdin
-$ cat foo.json | jov
+$ cat posts.json | jov
 
 # From file
-$ jov -f foo.json
+$ jov -f posts.json
+
+{
+  "result": [
+    {
+      "body": "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system.",
+      "created_at": "2011-04-22T13:33:48Z",
+      "id": 1,
+      "title": "foo"
+    },
+    {
+      "body": "The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary.",
+      "created_at": "2012-04-22T13:33:48Z",
+      "id": 2,
+      "title": "bar"
+    },
+    {
+      "body": "Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.",
+      "created_at": "2013-04-22T13:33:48Z",
+      "id": 3,
+      "title": "baz"
+    }
+  ],
+  "status": 200
+}
 ```
 
-[image]
-
-### with command
+### get field
 
 ```
-$ cat foo.json | jov select id title
-[
-  {
-    "id": 1,
-    "title": "foo"
-  },
-  {
-    "id": 2,
-    "title": "bar"
-  },
-  {
-    "id": 3,
-    "title": "baz"
-  }
-]
-```
-
-```
-$ cat foo.json | jov head 2
+$ cat posts.json | jov get result
 [
   {
     "body": "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system.",
@@ -66,6 +75,98 @@ $ cat foo.json | jov head 2
     "created_at": "2012-04-22T13:33:48Z",
     "id": 2,
     "title": "bar"
+  },
+  {
+    "body": "Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.",
+    "created_at": "2013-04-22T13:33:48Z",
+    "id": 3,
+    "title": "baz"
+  }
+]
+```
+
+### select or reject fields
+
+select:
+
+```
+$ cat posts.json \
+  | jov get result \
+  | jov select id title
+[
+  {
+    "id": 1,
+    "title": "foo"
+  },
+  {
+    "id": 2,
+    "title": "bar"
+  },
+  {
+    "id": 3,
+    "title": "baz"
+  }
+]
+```
+
+reject:
+
+```
+$ cat posts.json \
+  | jov get result \
+  | jov reject id body
+[
+  {
+    "created_at": "2011-04-22T13:33:48Z",
+    "title": "foo"
+  },
+  {
+    "created_at": "2012-04-22T13:33:48Z",
+    "title": "bar"
+  },
+  {
+    "created_at": "2013-04-22T13:33:48Z",
+    "title": "baz"
+  }
+]
+```
+
+### head or tail
+
+head:
+
+```
+$ cat posts.json \
+  | jov get result \
+  | jov select id title \
+  | jov head 2
+[
+  {
+    "id": 1,
+    "title": "foo"
+  },
+  {
+    "id": 2,
+    "title": "bar"
+  }
+]
+```
+
+tail:
+
+```
+$ cat posts.json \
+  | jov get result \
+  | jov select id title \
+  | jov tail 2
+[
+  {
+    "id": 2,
+    "title": "bar"
+  },
+  {
+    "id": 3,
+    "title": "baz"
   }
 ]
 ```
@@ -73,269 +174,22 @@ $ cat foo.json | jov head 2
 ### truncate string
 
 ```
-$ cat foo.json | jov -t 50
+$ cat posts.json \
+  | jov get result \
+  | jov select title body \
+  | jov truncate 50
 [
   {
     "body": "But I must explain to you how all this mistaken id...",
-    "created_at": "2011-04-22T13:33:48Z",
-    "id": 1,
     "title": "foo"
   },
   {
     "body": "The European languages are members of the same fam...",
-    "created_at": "2012-04-22T13:33:48Z",
-    "id": 2,
     "title": "bar"
   },
   {
     "body": "Nor again is there anyone who loves or pursues or ...",
-    "created_at": "2013-04-22T13:33:48Z",
-    "id": 3,
     "title": "baz"
-  }
-]
-```
-
-### with pipe
-
-```
-$ cat foo.json \
-    | jov head 2 \
-    | jov select title body \
-    | jov -t 50
-[
-  {
-    "body": "But I must explain to you how all this mistaken id...",
-    "title": "foo"
-  },
-  {
-    "body": "The European languages are members of the same fam...",
-    "title": "bar"
-  }
-]
-```
-
-Commands
-------------------
-
-### get
-
-```
-$ jov get <key>
-```
-
-Retrieve the value of a object.
-
-Input:
-
-```json
-{
-  "status": 200,
-  "results": [
-    { "key1": "val1" },
-    { "key2": "val2" },
-    { "key3": "val3" }
-  ]
-}
-```
-
-Output:
-
-```
-$ cat input.json | jov get results
-[
-  {
-    "key1": "val1"
-  },
-  {
-    "key2": "val2"
-  },
-  {
-    "key3": "val3"
-  }
-]
-```
-
-### select
-
-```
-$ jov select <property>...
-```
-
-Select properties of a collection (collection means `[Object, Object, ...]`)
-
-Input:
-
-```json
-[
-  {
-    "id": 1,
-    "title": "foo",
-    "created_at": "2011-04-22T13:33:48Z"
-  },
-  {
-    "id": 2,
-    "title": "bar",
-    "created_at": "2012-04-22T13:33:48Z"
-  },
-  {
-    "id": 3,
-    "title": "baz",
-    "created_at": "2013-04-22T13:33:48Z"
-  }
-]
-```
-
-Output:
-
-```
-$ cat input.json | jov select id title
-[
-  {
-    "id": 1,
-    "title": "foo"
-  },
-  {
-    "id": 2,
-    "title": "bar"
-  },
-  {
-    "id": 3,
-    "title": "baz"
-  }
-]
-```
-
-### reject
-
-```
-$ jov reject <property>...
-```
-
-Reject properties of a collection.
-
-Input:
-
-```json
-[
-  {
-    "id": 1,
-    "title": "foo",
-    "created_at": "2011-04-22T13:33:48Z"
-  },
-  {
-    "id": 2,
-    "title": "bar",
-    "created_at": "2012-04-22T13:33:48Z"
-  },
-  {
-    "id": 3,
-    "title": "baz",
-    "created_at": "2013-04-22T13:33:48Z"
-  }
-]
-```
-
-Output:
-
-```
-$ cat input.json | jov reject title
-[
-  {
-    "created_at": "2011-04-22T13:33:48Z",
-    "id": 1
-  },
-  {
-    "created_at": "2012-04-22T13:33:48Z",
-    "id": 2
-  },
-  {
-    "created_at": "2013-04-22T13:33:48Z",
-    "id": 3
-  }
-]
-```
-
-### head
-
-```
-$ jov head <length>
-```
-
-Return the first `<length>` elements of a array.
-
-Input:
-
-```json
-[
-  { "id": 1 },
-  { "id": 2 },
-  { "id": 3 },
-  { "id": 4 },
-  { "id": 5 },
-  { "id": 6 },
-  { "id": 7 },
-  { "id": 8 },
-  { "id": 9 },
-  { "id": 10 }
-]
-```
-
-Output:
-
-```
-$ cat input.json | jov head 3
-[
-  {
-    "id": 1
-  },
-  {
-    "id": 2
-  },
-  {
-    "id": 3
-  }
-]
-```
-
-### tail
-
-```
-$ jov tail <length>
-```
-
-Return the last `<length>` elements of a array.
-
-Input:
-
-```json
-[
-  { "id": 1 },
-  { "id": 2 },
-  { "id": 3 },
-  { "id": 4 },
-  { "id": 5 },
-  { "id": 6 },
-  { "id": 7 },
-  { "id": 8 },
-  { "id": 9 },
-  { "id": 10 }
-]
-```
-
-Output:
-
-```
-$ cat input.json | jov tail 3
-[
-  {
-    "id": 8
-  },
-  {
-    "id": 9
-  },
-  {
-    "id": 10
   }
 ]
 ```
