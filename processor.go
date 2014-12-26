@@ -60,16 +60,6 @@ func (p *Processor) Reject(in interface{}, keys ...string) (JsonCollection, erro
 	return out, nil
 }
 
-func (p *Processor) Slice(in interface{}, start, length int) (JsonArray, error) {
-	arr, err := p.toArray(in)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return p.sliceArray(arr, start, length), nil
-}
-
 func (p *Processor) Head(in interface{}, length int) (JsonArray, error) {
 	arr, err := p.toArray(in)
 

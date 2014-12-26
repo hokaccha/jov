@@ -59,7 +59,6 @@ func NewCliApp() *cli.App {
 		cmdGet,
 		cmdSelect,
 		cmdReject,
-		cmdSlice,
 		cmdHead,
 		cmdTail,
 	}
@@ -145,37 +144,6 @@ var cmdReject = cli.Command{
 	Description: makeCommandDescription("reject <property>...", ""),
 	Action: func(c *cli.Context) {
 		out, err := processor.Reject(InputJson, c.Args()...)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		outputJson(out, c)
-	},
-}
-
-var cmdSlice = cli.Command{
-	Name:        "slice",
-	Usage:       "Return a array starting at the <start> index and continuing for <length> elements of a array",
-	Description: makeCommandDescription("slice <start> <length>", ""),
-	Action: func(c *cli.Context) {
-		args := c.Args()
-
-		if len(args) != 2 {
-			argumentsErrorAndExit(c, "slice")
-		}
-
-		start, err := strconv.Atoi(args[0])
-		if err != nil {
-			argumentsErrorAndExit(c, "slice")
-		}
-
-		length, err := strconv.Atoi(args[1])
-		if err != nil {
-			argumentsErrorAndExit(c, "slice")
-		}
-
-		out, err := processor.Slice(InputJson, start, length)
 
 		if err != nil {
 			log.Fatal(err)

@@ -67,22 +67,6 @@ func TestProcessorReject(t *testing.T) {
 	assert(t, out, expected, "reject")
 }
 
-func TestProcessorSlice(t *testing.T) {
-	test := func(in []interface{}, start, length int, expected JsonArray, msg string) {
-		out, err := processor.Slice(in, start, length)
-		if err != nil {
-			t.Fatal(err)
-		}
-		assert(t, out, expected, msg)
-	}
-
-	test([]interface{}{1, 2, 3, 4, 5}, 0, 2, JsonArray{1, 2}, "slice-1")
-	test([]interface{}{1, 2, 3, 4, 5}, 2, 2, JsonArray{3, 4}, "slice-2")
-	test([]interface{}{1, 2, 3, 4, 5}, 3, 10, JsonArray{4, 5}, "slice-3")
-	test([]interface{}{1, 2, 3, 4, 5}, 3, 0, JsonArray{}, "slice-3")
-	test([]interface{}{1, 2, 3, 4, 5}, 10, 10, JsonArray{}, "slice-4")
-}
-
 func TestProcessorHead(t *testing.T) {
 	test := func(in []interface{}, length int, expected JsonArray, msg string) {
 		out, err := processor.Head(in, length)

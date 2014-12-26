@@ -340,44 +340,6 @@ $ cat input.json | jov tail 3
 ]
 ```
 
-### slice
-
-Return a array starting at the `<start>` index and continuing for `<length>` elements of a array.
-
-Input:
-
-```json
-[
-  { "id": 1 },
-  { "id": 2 },
-  { "id": 3 },
-  { "id": 4 },
-  { "id": 5 },
-  { "id": 6 },
-  { "id": 7 },
-  { "id": 8 },
-  { "id": 9 },
-  { "id": 10 }
-]
-```
-
-Output:
-
-```
-$ cat input2.json | jov slice 5 3
-[
-  {
-    "id": 6
-  },
-  {
-    "id": 7
-  },
-  {
-    "id": 8
-  }
-]
-```
-
 Licence
 ------------------
 
