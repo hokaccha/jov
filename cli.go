@@ -59,7 +59,7 @@ func NewCliApp() *cli.App {
 		cmdReject,
 		cmdHead,
 		cmdTail,
-		cmdTruncate,
+		cmdCut,
 	}
 	app.Before = doBefore
 	app.Action = doMain
@@ -204,20 +204,20 @@ var cmdTail = cli.Command{
 	},
 }
 
-var cmdTruncate = cli.Command{
-	Name:  "truncate",
+var cmdCut = cli.Command{
+	Name:  "cut",
 	Usage: "Truncate string to <length>",
-	Description: makeCommandDescription("truncate <length>", ""),
+	Description: makeCommandDescription("cut <length>", ""),
 	Action: func(c *cli.Context) {
 		args := c.Args()
 
 		if len(args) != 1 {
-			argumentsErrorAndExit(c, "truncate")
+			argumentsErrorAndExit(c, "cut")
 		}
 
 		length, err := strconv.Atoi(args[0])
 		if err != nil {
-			argumentsErrorAndExit(c, "truncate")
+			argumentsErrorAndExit(c, "cut")
 		}
 
 		formatter.StringMaxLength = length

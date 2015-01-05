@@ -177,7 +177,7 @@ $ cat posts.json \
 $ cat posts.json \
   | jov get result \
   | jov select title body \
-  | jov truncate 50
+  | jov cut 50
 [
   {
     "body": "But I must explain to you how all this mistaken id...",
