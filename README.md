@@ -13,7 +13,7 @@ $ go get -u github.com/hokaccha/jov
 Example
 ------------------
 
-![Example capture](http://i.imgur.com/ELFbJcA.png)
+![Example capture](http://i.imgur.com/Bf8RmdA.png)
 
 Usage
 ------------------
